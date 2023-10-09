@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-09-29 21:42:35
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-02 13:20:06
+ * @LastEditTime: 2023-10-09 20:17:05
  * @FilePath: /xoj-backend/model/enums/JudgeInfoMessageEnum.go
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -18,11 +18,13 @@ func (this JudgeInfoMessageEnum) GetText() string {
 	return JudgeInfoMessageEnumName[this]
 }
 
+// 提交题目的判题结果
+
 const (
 	ACCEPTED              JudgeInfoMessageEnum = "Accepted"
 	WRONG_ANSWER          JudgeInfoMessageEnum = "Wrong Answer"
 	COMPILE_ERROR         JudgeInfoMessageEnum = "Compile Error"
-	MEMORY_LIMIT_EXCEEDED JudgeInfoMessageEnum = ""
+	MEMORY_LIMIT_EXCEEDED JudgeInfoMessageEnum = "Memory Limit Exceeded"
 	TIME_LIMIT_EXCEEDED   JudgeInfoMessageEnum = "Time Limit Exceeded"
 	PRESENTATION_ERROR    JudgeInfoMessageEnum = "Presentation Error"
 	WAITING               JudgeInfoMessageEnum = "Waiting"

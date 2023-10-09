@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-02 12:29:56
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-09 11:20:08
+ * @LastEditTime: 2023-10-09 17:59:18
  */
 package impl
 
@@ -15,7 +15,7 @@ import (
 type ExampleCodeSandbox struct {
 }
 
-func (this ExampleCodeSandbox) ExecuteCode(executeCodeRequest model.ExecuteCodeRequest) model.ExecuteCodeResponse {
+func (this ExampleCodeSandbox) ExecuteCode(executeCodeRequest model.ExecuteCodeRequest) (model.ExecuteCodeResponse, error) {
 	return model.ExecuteCodeResponse{
 		OutputList: executeCodeRequest.InputList,
 		Message:    "测试执行成功",
@@ -25,5 +25,5 @@ func (this ExampleCodeSandbox) ExecuteCode(executeCodeRequest model.ExecuteCodeR
 			Memory:  100,
 			Time:    100,
 		},
-	}
+	}, nil
 }

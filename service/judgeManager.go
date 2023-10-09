@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-02 13:58:53
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-09 11:55:30
+ * @LastEditTime: 2023-10-09 15:04:14
  */
 package service
 
@@ -16,7 +16,7 @@ import (
 type JudgeManager struct {
 }
 
-// 执行判题
+// 选择对应的判题策略-执行判题
 func (this JudgeManager) DoJudge(judgeContext strategy.JudgeContext) model.JudgeInfo {
 	// 设置默认的判题策略
 	judgeStrategy := strategy.DefaultJudgeStrategy{}

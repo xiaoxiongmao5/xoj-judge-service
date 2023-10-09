@@ -2,28 +2,66 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-02 12:29:56
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-09 11:20:25
+ * @LastEditTime: 2023-10-09 18:02:46
  */
 package impl
 
 import (
+	"encoding/json"
+	"errors"
+	"fmt"
+
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/codesandbox/model"
-	judgeinfomessageenum "github.com/xiaoxiongmao5/xoj/xoj-judge-service/model/enums/JudgeInfoMessageEnum"
-	questionsubmitstatusenum "github.com/xiaoxiongmao5/xoj/xoj-judge-service/model/enums/QuestionSubmitStatusEnum"
+	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/mylog"
+	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/utils"
 )
 
 type RemoteCodeSandbox struct {
 }
 
-func (this RemoteCodeSandbox) ExecuteCode(executeCodeRequest model.ExecuteCodeRequest) model.ExecuteCodeResponse {
-	return model.ExecuteCodeResponse{
-		OutputList: executeCodeRequest.InputList,
-		Message:    "远程执行成功",
-		Status:     questionsubmitstatusenum.SUCCEED.GetValue(),
-		JudgeInfo: model.JudgeInfo{
-			Message: judgeinfomessageenum.ACCEPTED.GetText(),
-			Memory:  100,
-			Time:    100,
-		},
+// 响应的数据结构
+type ResponseData struct {
+	Code    int                       `json:"code"`
+	Message string                    `json:"message"`
+	Data    model.ExecuteCodeResponse `json:"data"`
+}
+
+func (this RemoteCodeSandbox) ExecuteCode(executeCodeRequest model.ExecuteCodeRequest) (executeCodeResponse model.ExecuteCodeResponse, err error) {
+	// 将请求数据结构体编码为 JSON 字符串
+	requestBody, err := json.Marshal(executeCodeRequest)
+	if err != nil {
+		msg := fmt.Sprintf("编码请求数据结构体失败：%s", err.Error())
+		mylog.Log.Error(msg)
+		return executeCodeResponse, errors.New(msg)
 	}
+
+	targetURL := "http://127.0.0.1:8093/executeCode"
+	bodyBytes, err := utils.SendHTTPRequest(
+		"POST",
+		targetURL,
+		requestBody,
+	)
+	if err != nil {
+		msg := fmt.Sprintf("请求代码沙箱失败：%s", err.Error())
+		mylog.Log.Error(msg)
+		return executeCodeResponse, errors.New(msg)
+	}
+
+	// 解析 JSON
+	var responseData ResponseData
+	if err := json.Unmarshal(bodyBytes, &responseData); err != nil {
+		msg := fmt.Sprintf("解析JSON响应数据失败：%s", err.Error())
+		mylog.Log.Error(msg)
+		return executeCodeResponse, errors.New(msg)
+	}
+
+	if responseData.Code != 0 {
+		msg := fmt.Sprintf("响应数据Code校验失败：%s", err.Error())
+		mylog.Log.Error(msg)
+		return executeCodeResponse, errors.New(msg)
+	}
+
+	utils.CopyStructFields(responseData.Data, &executeCodeResponse)
+
+	return executeCodeResponse, nil
 }
