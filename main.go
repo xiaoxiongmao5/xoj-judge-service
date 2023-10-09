@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-08 15:12:23
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-08 15:37:45
+ * @LastEditTime: 2023-10-08 20:25:32
  * @FilePath: /xoj-judge-service/main.go
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,11 +13,11 @@ import (
 
 	"github.com/beego/beego/v2/server/web/context"
 
+	beego "github.com/beego/beego/v2/server/web"
+	_ "github.com/xiaoxiongmao5/xoj/xoj-judge-service/loadconfig"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/mylog"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/myresq"
 	_ "github.com/xiaoxiongmao5/xoj/xoj-judge-service/routers"
-
-	beego "github.com/beego/beego/v2/server/web"
 )
 
 func init() {
