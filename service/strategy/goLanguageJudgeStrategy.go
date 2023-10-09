@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-02 14:25:03
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-09 17:42:30
+ * @LastEditTime: 2023-10-09 21:21:04
  * @FilePath: /xoj-backend/judge/strategy/impl/DefaultJudgeStrategy.go
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,6 +13,7 @@ import (
 
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/codesandbox/model"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/model/dto/question"
+	codeexecstatusenum "github.com/xiaoxiongmao5/xoj/xoj-judge-service/model/enums/CodeExecStatusEnum"
 	judgeinfomessageenum "github.com/xiaoxiongmao5/xoj/xoj-judge-service/model/enums/JudgeInfoMessageEnum"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/mylog"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/utils"
@@ -39,20 +40,20 @@ func (this GoLanguageJudgeStrategy) DoJudge(judgeContext JudgeContext) (judgeInf
 	judgeInfoResponse.Time = time
 
 	// 判断沙箱执行状态是否正常
-	if !utils.CheckSame[int32]("判断沙箱执行的状态是否正常", executeCodeResponse.Status, 1) {
+	if !utils.CheckSame[int32]("判断沙箱执行的状态是否正常", executeCodeResponse.Status, codeexecstatusenum.SUCCEED.GetValue()) {
 		mylog.Log.Info("沙箱执行异常时返回的错误message: ", executeCodeResponse.Message)
-		if executeCodeResponse.Status == 2 {
-			// 编译错误
+		// 编译错误
+		if executeCodeResponse.Status == codeexecstatusenum.COMPILE_FAIL.GetValue() || executeCodeResponse.Status == codeexecstatusenum.COMPILE_TIMEOUT_ERROR.GetValue() {
 			judgeInfoResponse.Message = judgeinfomessageenum.COMPILE_ERROR.GetValue()
 			return
 		}
-		if executeCodeResponse.Status == 3 {
-			// 运行错误
+		// 运行错误
+		if executeCodeResponse.Status == codeexecstatusenum.RUN_FAIL.GetValue() || executeCodeResponse.Status == codeexecstatusenum.RUN_TIMEOUT_ERROR.GetValue() {
 			judgeInfoResponse.Message = judgeinfomessageenum.RUNTIME_ERROR.GetValue()
 			return
 		}
-		if executeCodeResponse.Status == 4 {
-			// 系统错误
+		// 系统错误
+		if executeCodeResponse.Status == codeexecstatusenum.SYSTEM_ERROR.GetValue() {
 			judgeInfoResponse.Message = judgeinfomessageenum.SYSTEM_ERROR.GetValue()
 			return
 		}
