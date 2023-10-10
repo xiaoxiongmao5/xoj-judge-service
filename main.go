@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-08 15:12:23
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-09 18:52:21
+ * @LastEditTime: 2023-10-10 16:09:37
  * @FilePath: /xoj-judge-service/main.go
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,13 +10,19 @@ package main
 
 import (
 	"net/http"
+	"sync"
+
+	Octx "context"
 
 	"github.com/beego/beego/v2/server/web/context"
 
 	beego "github.com/beego/beego/v2/server/web"
-	_ "github.com/xiaoxiongmao5/xoj/xoj-judge-service/loadconfig"
+	_ "github.com/xiaoxiongmao5/xoj/xoj-judge-service/config"
+	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/consumer"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/mylog"
+	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/myredis"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/myresq"
+	_ "github.com/xiaoxiongmao5/xoj/xoj-judge-service/myrpc"
 	_ "github.com/xiaoxiongmao5/xoj/xoj-judge-service/routers"
 )
 
@@ -28,6 +34,15 @@ func init() {
 
 func main() {
 	defer mylog.Log.Writer().Close()
+	defer myredis.Close(myredis.RedisCli)
+
+	ctx := Octx.Background()
+
+	// 创建互斥锁
+	var mu sync.Mutex
+
+	// 启动消费者协程
+	consumer.PopQuestionSubmit2Queue(ctx, myredis.RedisCli, &mu)
 
 	if beego.BConfig.RunMode == "dev" {
 		beego.BConfig.WebConfig.DirectoryIndex = true

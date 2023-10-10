@@ -2,9 +2,9 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-08 20:04:28
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-09 10:49:55
+ * @LastEditTime: 2023-10-10 15:36:11
  */
-package loadconfig
+package myrpc
 
 import (
 	"flag"
@@ -17,7 +17,7 @@ import (
 )
 
 func init() {
-	mylog.Log.Info("init begin: loadrpc")
+	mylog.Log.Info("init begin: myrpc")
 
 	config.SetConsumerService(RpcQuestionClientImpl)
 	config.SetConsumerService(RpcQuestionSubmitClientImpl)
@@ -25,7 +25,7 @@ func init() {
 	// 加载 Dubbo-go 的配置
 	LoadDubboConfig()
 
-	mylog.Log.Info("init end  : loadrpc")
+	mylog.Log.Info("init end  : myrpc")
 }
 
 var RpcQuestionClientImpl = new(rpc_api.QuestionClientImpl)

@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-02 14:25:03
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-09 21:20:41
+ * @LastEditTime: 2023-10-10 21:08:04
  * @FilePath: /xoj-backend/judge/strategy/impl/DefaultJudgeStrategy.go
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -32,8 +32,8 @@ func (this DefaultJudgeStrategy) DoJudge(judgeContext JudgeContext) (judgeInfoRe
 
 	outputList := executeCodeResponse.OutputList
 	judgeInfo := executeCodeResponse.JudgeInfo
-	memory := judgeInfo.Memory
-	time := judgeInfo.Time
+	memory := judgeInfo.Memory //单位：byte
+	time := judgeInfo.Time     //单位：ms
 
 	// 实际消耗的内存和时间最大值
 	judgeInfoResponse.Memory = memory
@@ -87,7 +87,8 @@ func (this DefaultJudgeStrategy) DoJudge(judgeContext JudgeContext) (judgeInfoRe
 	}
 	needMemoryLimit := judgeConfig.MemoryLimit
 	needTimeLimit := judgeConfig.TimeLimit
-	if memory > needMemoryLimit {
+	if memory/1024 > needMemoryLimit {
+		mylog.Log.Errorf("实际使用内存=[%v]byte, 内存限制=[%v]KB", memory, needMemoryLimit)
 		// 内存溢出
 		judgeInfoResponse.Message = judgeinfomessageenum.MEMORY_LIMIT_EXCEEDED.GetValue()
 		return
