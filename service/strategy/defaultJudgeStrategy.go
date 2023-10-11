@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-02 14:25:03
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-10 21:08:04
+ * @LastEditTime: 2023-10-11 22:16:15
  * @FilePath: /xoj-backend/judge/strategy/impl/DefaultJudgeStrategy.go
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -43,13 +43,23 @@ func (this DefaultJudgeStrategy) DoJudge(judgeContext JudgeContext) (judgeInfoRe
 	if !utils.CheckSame[int32]("判断沙箱执行的状态是否正常", executeCodeResponse.Status, codeexecstatusenum.SUCCEED.GetValue()) {
 		mylog.Log.Info("沙箱执行异常时返回的错误message: ", executeCodeResponse.Message)
 		// 编译错误
-		if executeCodeResponse.Status == codeexecstatusenum.COMPILE_FAIL.GetValue() || executeCodeResponse.Status == codeexecstatusenum.COMPILE_TIMEOUT_ERROR.GetValue() {
+		if executeCodeResponse.Status == codeexecstatusenum.COMPILE_FAIL.GetValue() {
 			judgeInfoResponse.Message = judgeinfomessageenum.COMPILE_ERROR.GetValue()
 			return
 		}
+		// 编译超时
+		if executeCodeResponse.Status == codeexecstatusenum.COMPILE_TIMEOUT_ERROR.GetValue() {
+			judgeInfoResponse.Message = judgeinfomessageenum.COMPILE_TIME_LIMIT_EXCEEDED.GetValue()
+			return
+		}
 		// 运行错误
-		if executeCodeResponse.Status == codeexecstatusenum.RUN_FAIL.GetValue() || executeCodeResponse.Status == codeexecstatusenum.RUN_TIMEOUT_ERROR.GetValue() {
+		if executeCodeResponse.Status == codeexecstatusenum.RUN_FAIL.GetValue() {
 			judgeInfoResponse.Message = judgeinfomessageenum.RUNTIME_ERROR.GetValue()
+			return
+		}
+		// 运行超时
+		if executeCodeResponse.Status == codeexecstatusenum.RUN_TIMEOUT_ERROR.GetValue() {
+			judgeInfoResponse.Message = judgeinfomessageenum.RUN_TIME_LIMIT_EXCEEDED.GetValue()
 			return
 		}
 		// 系统错误
@@ -94,7 +104,7 @@ func (this DefaultJudgeStrategy) DoJudge(judgeContext JudgeContext) (judgeInfoRe
 		return
 	}
 	if time > needTimeLimit {
-		// 超时
+		// 超题限时
 		judgeInfoResponse.Message = judgeinfomessageenum.TIME_LIMIT_EXCEEDED.GetValue()
 		return
 	}
