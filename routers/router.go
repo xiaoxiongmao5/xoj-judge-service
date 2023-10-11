@@ -4,13 +4,13 @@
  * @LastEditors: 小熊 627516430@qq.com
  * @LastEditTime: 2023-10-09 13:45:01
  */
-// @APIVersion 1.0.0
-// @Title beego Test API
-// @Description beego has a very cool tools to autogenerate documents for your API
-// @Contact astaxie@gmail.com
-// @TermsOfServiceUrl http://beego.me/
-// @License Apache 2.0
-// @LicenseUrl http://www.apache.org/licenses/LICENSE-2.0.html
+//	@APIVersion			1.0.0
+//	@Title				beego Test API
+//	@Description		beego has a very cool tools to autogenerate documents for your API
+//	@Contact			astaxie@gmail.com
+//	@TermsOfServiceUrl	http://beego.me/
+//	@License			Apache 2.0
+//	@LicenseUrl			http://www.apache.org/licenses/LICENSE-2.0.html
 package routers
 
 import (

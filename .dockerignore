@@ -1,0 +1,8 @@
+doc/
+log/
+api.rest
+swagger/
+oj-judge-service
+README.md
+tests/
+cache/

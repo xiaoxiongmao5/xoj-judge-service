@@ -1,2 +1,7 @@
-cache/*
+doc/*
 log/*
+api*.rest
+swagger/*
+oj-judge-service
+tests/*
+cache/*

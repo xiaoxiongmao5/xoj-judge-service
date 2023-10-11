@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-02 12:29:56
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-09 18:02:46
+ * @LastEditTime: 2023-10-11 16:48:16
  */
 package impl
 
@@ -12,6 +12,7 @@ import (
 	"fmt"
 
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/codesandbox/model"
+	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/config"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/mylog"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/utils"
 )
@@ -35,7 +36,7 @@ func (this RemoteCodeSandbox) ExecuteCode(executeCodeRequest model.ExecuteCodeRe
 		return executeCodeResponse, errors.New(msg)
 	}
 
-	targetURL := "http://127.0.0.1:8093/executeCode"
+	targetURL := config.AppConfigDynamic.RemoteCodeSandboxHost
 	bodyBytes, err := utils.SendHTTPRequest(
 		"POST",
 		targetURL,
