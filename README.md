@@ -8,10 +8,15 @@
 
 ⚠️ 注意：项目内使用了rpc远程调用，依赖 注册中心已启动、接口提供方已启动(具体见下面《关于 RPC 远程调用》的说明。
 
-```cmd
-go mod tidy
-go run main.go
-```
+1. 修改/conf 下的配置
+    * appconfig.json：修改 `Redis` 的连接地址
+    * appdynamicconfig.json：修改 `remoteCodeSandboxHost` 为部署代码沙箱服务的服务器IP地址
+    * dubbogo.yaml：修改 `nacos` 的连接地址
+2. 启动项目
+    ```cmd
+    go mod tidy
+    go run main.go
+    ```
 
 ## 运行项目中的单元测试
 
