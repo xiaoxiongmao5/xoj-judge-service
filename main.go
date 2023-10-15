@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-08 15:12:23
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-11 17:02:05
+ * @LastEditTime: 2023-10-14 17:22:36
  * @FilePath: /xoj-judge-service/main.go
  */
 package main
@@ -14,7 +14,6 @@ import (
 
 	beego "github.com/beego/beego/v2/server/web"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/config"
-	_ "github.com/xiaoxiongmao5/xoj/xoj-judge-service/config"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/consumer"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/middleware"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/mylog"
@@ -34,7 +33,7 @@ func main() {
 	defer myredis.Close(myredis.RedisCli)
 
 	// 启动动态配置文件加载协程
-	go config.LoadAppConfigDynamic()
+	go config.LoadAppDynamicConfigCycle()
 
 	ctx := Octx.Background()
 

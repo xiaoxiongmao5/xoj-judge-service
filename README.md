@@ -1,3 +1,10 @@
+<!--
+ * @Author: 小熊 627516430@qq.com
+ * @Date: 2023-10-14 20:55:53
+ * @LastEditors: 小熊 627516430@qq.com
+ * @LastEditTime: 2023-10-15 18:46:19
+ * @FilePath: /xoj-judge-service/README.md
+-->
 # xoj-judge-service（在线判题系统-判题服务）
 
 ## 项目的核心业务
@@ -7,6 +14,8 @@
 ## 项目本地启动
 
 ⚠️ 注意：项目内使用了rpc远程调用，依赖 注册中心已启动、接口提供方已启动(具体见下面《关于 RPC 远程调用》的说明。
+
+* 前置需要：该项目使用了Redis，需要先确保启动了Redis服务
 
 1. 修改/conf 下的配置
     * appconfig.json：修改 `redis` 的连接地址

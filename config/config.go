@@ -33,12 +33,6 @@ func init() {
 	mylog.Log.Info("init end  : config")
 }
 
-// 用于给用户分配accessKey,secretKey
-const SALT = "xj"
-
-// 用于给用户生成登录验证token（jwt）
-const SecretKey = "your-secret-key"
-
 // App配置数据
 type AppConfiguration struct {
 	Database struct {
@@ -126,6 +120,7 @@ func LoadAppConfigDynamic() (*AppConfigurationDynamic, error) {
 	return config, nil
 }
 
+// 定时任务，轮询更新动态配置
 func LoadAppDynamicConfigCycle() {
 	filePath := "conf/appdynamicconfig.json"
 	ticker := time.NewTicker(3 * time.Second) // 每3秒检查一次配置文件
