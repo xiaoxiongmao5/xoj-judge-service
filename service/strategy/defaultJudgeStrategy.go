@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-02 14:25:03
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-15 18:43:45
+ * @LastEditTime: 2023-10-15 22:03:48
  * @FilePath: /xoj-backend/judge/strategy/impl/DefaultJudgeStrategy.go
  * @Description: 默认判题策略
  */
@@ -134,80 +134,17 @@ func (this DefaultJudgeStrategy) DoJudge(judgeContext JudgeContext) model.JudgeI
 		return judgeInfoResponse
 	}
 
-	// if !utils.CheckSame[int32]("判断沙箱返回数据-执行状态[status]是否正常", status, codeexecstatusenum.SUCCEED.GetValue()) {
-	// 	judgeInfoResponse.Detail = message
-	// 	switch status {
-	// 	case codeexecstatusenum.COMPILE_FAIL.GetValue(): //编译错误
-	// 		judgeInfoResponse.Message = judgeinfomessageenum.COMPILE_ERROR.GetValue()
-	// 		return
-	// 	case codeexecstatusenum.COMPILE_TIMEOUT_ERROR.GetValue(): //编译超时
-	// 		judgeInfoResponse.Message = judgeinfomessageenum.COMPILE_TIME_LIMIT_EXCEEDED.GetValue()
-	// 		return
-	// 	case codeexecstatusenum.RUN_FAIL.GetValue(): // 运行错误
-	// 		judgeInfoResponse.Message = judgeinfomessageenum.RUNTIME_ERROR.GetValue()
-	// 		return
-	// 	case codeexecstatusenum.RUN_TIMEOUT_ERROR.GetValue(): //运行超时
-	// 		judgeInfoResponse.Message = judgeinfomessageenum.RUN_TIME_LIMIT_EXCEEDED.GetValue()
-	// 		return
-	// 	case codeexecstatusenum.SYSTEM_ERROR.GetValue(): //系统错误
-	// 		judgeInfoResponse.Message = judgeinfomessageenum.SYSTEM_ERROR.GetValue()
-	// 		return
-	// 	}
-	// }
-
 	// 先判断沙箱执行的结果输出数量是否和预期输出数量相等
-	// if !utils.CheckSame[int]("判断沙箱执行的输入和输出数量是否一致", len(inputList), len(outputList)) {
-	// 	// 答案错误
-	// 	judgeInfoResponse.Message = judgeinfomessageenum.WRONG_ANSWER.GetValue()
-	// 	judgeInfoResponse.Detail = "执行的输出条目与输入用例数量不等"
-	// 	return judgeInfoResponse
-	// }
 	if ok := CheckCodeSandboxResOutputLengthOk(inputList, outputList, &judgeInfoResponse); !ok {
 		return judgeInfoResponse
 	}
 
 	// 依次判断每一项输出和预期输出是否相等
-	// for i, len := 0, len(judgeCaseList); i < len; i++ {
-	// 	judgeCase := judgeCaseList[i]
-	// 	if !utils.CheckSame[string]("判断每项输出是否符合预期", judgeCase.Output, outputList[i]) {
-	// 		// 答案错误
-	// 		judgeInfoResponse.Message = judgeinfomessageenum.WRONG_ANSWER.GetValue()
-	// 		detail := fmt.Sprintf("执行输出结果错误，输入=[%s]时,预期结果=[%s],你的结果=[%s]", judgeCase.Input, judgeCase.Output, outputList[i])
-	// 		judgeInfoResponse.Detail = detail
-	// 		return judgeInfoResponse
-	// 	}
-	// }
 	if ok := CheckCodeSandboxResOutputRight(judgeCaseList, outputList, &judgeInfoResponse); !ok {
 		return judgeInfoResponse
 	}
 
 	// 判断题目限制
-	// judgeConfigStr := quesionObj.JudgeConfig
-	// judgeConfig := question.JudgeConfig{}
-	// if err := json.Unmarshal([]byte(judgeConfigStr), &judgeConfig); err != nil {
-	// 	mylog.Log.Errorf("json.Unmarshal转换失败[%v]", judgeConfigStr)
-	// 	// 系统错误
-	// 	judgeInfoResponse.Message = judgeinfomessageenum.SYSTEM_ERROR.GetValue()
-	// 	judgeInfoResponse.Detail = judgeInfoResponse.Message
-	// 	return judgeInfoResponse
-	// }
-	// needMemoryLimit := judgeConfig.MemoryLimit
-	// needTimeLimit := judgeConfig.TimeLimit
-	// if memory/1024 > needMemoryLimit {
-	// 	detail := fmt.Sprintf("实际使用内存=[%v]byte, 内存限制=[%v]KB", memory, needMemoryLimit)
-	// 	mylog.Log.Errorf(detail)
-	// 	// 内存溢出
-	// 	judgeInfoResponse.Message = judgeinfomessageenum.MEMORY_LIMIT_EXCEEDED.GetValue()
-	// 	judgeInfoResponse.Detail = detail
-	// 	return judgeInfoResponse
-	// }
-	// if time > needTimeLimit {
-	// 	detail := fmt.Sprintf("实际使用时间=[%v]ms, 时间限制=[%v]ms", time, needTimeLimit)
-	// 	// 超题限时
-	// 	judgeInfoResponse.Message = judgeinfomessageenum.TIME_LIMIT_EXCEEDED.GetValue()
-	// 	judgeInfoResponse.Detail = detail
-	// 	return judgeInfoResponse
-	// }
 	if ok := CheckJudgeConfigPass(time, memory, quesionObj.JudgeConfig, &judgeInfoResponse); !ok {
 		return judgeInfoResponse
 	}
