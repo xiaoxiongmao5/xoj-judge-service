@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-10 15:51:10
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-10 16:21:33
+ * @LastEditTime: 2023-10-16 11:23:58
  * @FilePath: /xoj-judge-service/consumer/consumer.go
  * @Description: 消费者
  */
@@ -13,7 +13,6 @@ import (
 	"sync"
 	"time"
 
-	beeContext "github.com/beego/beego/v2/server/web/context"
 	"github.com/go-redis/redis/v8"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/mylog"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/service"
@@ -58,7 +57,7 @@ func PopQuestionSubmit2Queue(ctx context.Context, client *redis.Client, mu *sync
 			}
 
 			// 执行判题
-			service.DoJudge(&beeContext.Context{}, questionsubmitId)
+			service.DoJudge(nil, questionsubmitId)
 		}
 	}
 }

@@ -2,6 +2,7 @@ package myresq
 
 import (
 	"github.com/beego/beego/v2/server/web/context"
+	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/mylog"
 )
 
 // 通用返回类
@@ -21,6 +22,10 @@ func NewBaseResponse(code RespCode, message string, data interface{}) *BaseRespo
 }
 
 func Abort(ctx *context.Context, code RespCode, msg string) {
+	if ctx == nil {
+		mylog.Log.Error("Abort param ctx is nil")
+		return
+	}
 	message := code.GetMessage()
 	if msg != "" {
 		message = msg
@@ -31,6 +36,10 @@ func Abort(ctx *context.Context, code RespCode, msg string) {
 }
 
 func Success(ctx *context.Context, data interface{}) {
+	if ctx == nil {
+		mylog.Log.Error("Success param ctx is nil")
+		return
+	}
 	jsondata := NewBaseResponse(SUCCESS, SUCCESS.GetMessage(), data)
 	ctx.Input.SetData("json", jsondata)
 	ctx.Abort(200, "")

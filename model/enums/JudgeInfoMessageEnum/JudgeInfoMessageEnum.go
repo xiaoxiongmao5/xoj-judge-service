@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-09-29 21:42:35
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-11 22:15:33
+ * @LastEditTime: 2023-10-16 11:34:09
  * @FilePath: /xoj-backend/model/enums/JudgeInfoMessageEnum.go
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,6 +34,7 @@ const (
 	DANGEROUS_OPERATION         JudgeInfoMessageEnum = "Dangerous Operation"
 	RUNTIME_ERROR               JudgeInfoMessageEnum = "Runtime Error"
 	SYSTEM_ERROR                JudgeInfoMessageEnum = "System Error"
+	LANGUAGE_UNSUPPORTED        JudgeInfoMessageEnum = "LANGUAGE UNSUPPORTED"
 )
 
 var JudgeInfoMessageEnumName = map[JudgeInfoMessageEnum]string{
@@ -50,6 +51,7 @@ var JudgeInfoMessageEnumName = map[JudgeInfoMessageEnum]string{
 	DANGEROUS_OPERATION:         "危险操作",
 	RUNTIME_ERROR:               "运行错误",
 	SYSTEM_ERROR:                "系统错误",
+	LANGUAGE_UNSUPPORTED:        "语言不支持",
 }
 
 // 根据 value 获取枚举
