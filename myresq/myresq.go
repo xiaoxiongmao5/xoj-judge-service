@@ -44,3 +44,17 @@ func Success(ctx *context.Context, data interface{}) {
 	ctx.Input.SetData("json", jsondata)
 	ctx.Abort(200, "")
 }
+
+func AbortWithData(ctx *context.Context, code RespCode, msg string, data interface{}) {
+	if ctx == nil {
+		mylog.Log.Error("AbortWithData param ctx is nil")
+		return
+	}
+	message := code.GetMessage()
+	if msg != "" {
+		message = msg
+	}
+	jsondata := NewBaseResponse(code, message, data)
+	ctx.Input.SetData("json", jsondata)
+	ctx.Abort(200, "")
+}
