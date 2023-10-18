@@ -2,13 +2,14 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-02 13:27:42
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-16 13:06:18
+ * @LastEditTime: 2023-10-18 00:42:39
  */
 package service
 
 import (
 	"context"
 	"encoding/json"
+	"errors"
 
 	beeContext "github.com/beego/beego/v2/server/web/context"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/codesandbox"
@@ -18,6 +19,8 @@ import (
 	judgeinfomessageenum "github.com/xiaoxiongmao5/xoj/xoj-judge-service/model/enums/JudgeInfoMessageEnum"
 	questionsubmitlanguageenum "github.com/xiaoxiongmao5/xoj/xoj-judge-service/model/enums/QuestionSubmitLanguageEnum"
 	questionsubmitstatusenum "github.com/xiaoxiongmao5/xoj/xoj-judge-service/model/enums/QuestionSubmitStatusEnum"
+	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/myerror"
+	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/mylog"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/myresq"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/myrpc"
 	"github.com/xiaoxiongmao5/xoj/xoj-judge-service/rpc_api"
@@ -112,9 +115,27 @@ func DoJudge(beeCtx *beeContext.Context, questionsubmitId int64) *entity.Questio
 	})
 	if err != nil {
 		questionSubmitObj.Status = questionsubmitstatusenum.FAILED.GetValue()
+
+		var e myerror.ErrRemoteSandbox
+		if errors.As(err, &e) {
+			mylog.Log.Error("代码沙箱返回错误, err=", err.Error())
+			judgeInfoStr, _ := utils.JsonMarshal(model.JudgeInfo{
+				Message: judgeinfomessageenum.SANDBOX_SYSTEM_ERROR.GetValue(),
+				Detail:  err.Error(),
+				Memory:  executeCodeResponse.JudgeInfo.Memory,
+				Time:    executeCodeResponse.JudgeInfo.Time,
+			}, judgeinfomessageenum.SANDBOX_SYSTEM_ERROR.GetText())
+			questionSubmitObj.JudgeInfo = judgeInfoStr
+			UpdateQuestionSubmitObj(ctx, beeCtx, questionSubmitObj, rpcQuestionsubmitObj)
+			myresq.Abort(beeCtx, myresq.OPERATION_ERROR, err.Error())
+			return &questionSubmitObj
+		}
+
 		judgeInfoStr, _ := utils.JsonMarshal(model.JudgeInfo{
 			Message: judgeinfomessageenum.SYSTEM_ERROR.GetValue(),
 			Detail:  err.Error(),
+			Memory:  executeCodeResponse.JudgeInfo.Memory,
+			Time:    executeCodeResponse.JudgeInfo.Time,
 		}, judgeinfomessageenum.SYSTEM_ERROR.GetText())
 		questionSubmitObj.JudgeInfo = judgeInfoStr
 		UpdateQuestionSubmitObj(ctx, beeCtx, questionSubmitObj, rpcQuestionsubmitObj)

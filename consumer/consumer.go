@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-10 15:51:10
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-16 11:23:58
+ * @LastEditTime: 2023-10-17 22:41:07
  * @FilePath: /xoj-judge-service/consumer/consumer.go
  * @Description: 消费者
  */
@@ -57,7 +57,7 @@ func PopQuestionSubmit2Queue(ctx context.Context, client *redis.Client, mu *sync
 			}
 
 			// 执行判题
-			service.DoJudge(nil, questionsubmitId)
+			go service.DoJudge(nil, questionsubmitId)
 		}
 	}
 }

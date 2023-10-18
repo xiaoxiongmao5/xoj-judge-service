@@ -2,7 +2,7 @@
  * @Author: 小熊 627516430@qq.com
  * @Date: 2023-10-02 14:25:03
  * @LastEditors: 小熊 627516430@qq.com
- * @LastEditTime: 2023-10-15 22:03:48
+ * @LastEditTime: 2023-10-17 23:09:53
  * @FilePath: /xoj-backend/judge/strategy/impl/DefaultJudgeStrategy.go
  * @Description: 默认判题策略
  */
@@ -43,6 +43,9 @@ func CheckCodeSandboxResStatusOk(status int32, message string, judgeInfoResponse
 			return false
 		case codeexecstatusenum.RUN_TIMEOUT_ERROR.GetValue(): //运行超时
 			judgeInfoResponse.Message = judgeinfomessageenum.RUN_TIME_LIMIT_EXCEEDED.GetValue()
+			return false
+		case codeexecstatusenum.OUT_OF_MEMORY_ERROR.GetValue(): //内存不足
+			judgeInfoResponse.Message = judgeinfomessageenum.OUT_OF_MEMORY.GetValue()
 			return false
 		case codeexecstatusenum.SYSTEM_ERROR.GetValue(): //系统错误
 			judgeInfoResponse.Message = judgeinfomessageenum.SYSTEM_ERROR.GetValue()
